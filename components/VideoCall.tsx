@@ -81,10 +81,6 @@ export default function VideoCall({
 
     return () => {
       isMounted = false;
-      if (call && hasJoined) {
-        call.leave();
-      }
-
       if (client) {
         client.disconnectUser();
       }
