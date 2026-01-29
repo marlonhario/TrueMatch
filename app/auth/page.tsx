@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/contexts/auth-context";
 import { createClient } from "@/lib/supabase/client";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -11,15 +12,21 @@ export default function AuthPage() {
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<React.ReactNode>("");
   const supabase = createClient();
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    if (user && !authLoading) {
-      router.push("/");
-    }
-  }, [user, authLoading, router]);
+  function getEmailProviderLink(email: string) {
+    const domain = email.split("@")[1];
+
+    if (domain.includes("gmail")) return "https://mail.google.com";
+    if (domain.includes("yahoo")) return "https://mail.yahoo.com";
+    if (domain.includes("outlook") || domain.includes("hotmail"))
+      return "https://outlook.live.com/mail/";
+
+    return "mailto:";
+  }
 
   async function handleAuth(e: React.FormEvent) {
     e.preventDefault();
@@ -36,7 +43,18 @@ export default function AuthPage() {
 
         if (error) throw error;
         if (data.user && !data.session) {
-          setError("Please check your email for a confirmation link");
+          const emailLink = getEmailProviderLink(email);
+          setSuccess(
+            <>
+              We&apos;ve sent a confirmation link to{" "}
+              <Link
+                href={emailLink}
+                className="text-gray-400 dark:text-gray-300 hover:text-pink-600 dark:hover:text-pink-400 font-medium transition-colors duration-200"
+              >
+                {email}📥
+              </Link>
+            </>,
+          );
           return;
         }
       } else {
@@ -52,6 +70,12 @@ export default function AuthPage() {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    if (user && !authLoading) {
+      router.push("/");
+    }
+  }, [user, authLoading, router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br  from-slate-50 to-pink-50 dark:from-slate-900 dark:to-slate-800">
@@ -102,6 +126,11 @@ export default function AuthPage() {
             />
           </div>
 
+          {success && (
+            <div className="text-green-600 dark:text-red-400 text-sm">
+              {success}
+            </div>
+          )}
           {error && (
             <div className="text-red-600 dark:text-red-400 text-sm">
               {error}
