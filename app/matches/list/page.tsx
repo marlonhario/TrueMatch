@@ -5,6 +5,7 @@ import { getUserMatches } from "@/lib/actions/matches";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { calculateAge } from "@/lib/helpers/calculate-age";
+import Image from "next/image";
 
 export default function MatchesListPage() {
   const [matches, setMatches] = useState<UserProfile[]>([]);
@@ -47,7 +48,7 @@ export default function MatchesListPage() {
             Your Matches
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            {matches.length} match{matches.length !== 1 ? "es" : ""}
+            {matches.length} match{matches.length !== 1 && "es"}
           </p>
         </header>
 
@@ -80,9 +81,11 @@ export default function MatchesListPage() {
                 >
                   <div className="flex items-center space-x-4">
                     <div className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
-                      <img
+                      <Image
                         src={match.avatar_url}
                         alt={match.full_name}
+                        fill
+                        priority
                         className="w-full h-full object-cover"
                       />
                     </div>

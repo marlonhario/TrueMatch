@@ -14,6 +14,7 @@ export default function MatchesPage() {
 
   const [showMatchNotification, setShowMatchNotification] = useState(false);
   const [matchedUser, setMatchedUser] = useState<UserProfile | null>(null);
+  const [isLikeLoading, setIsLikeLoading] = useState(false);
 
   const router = useRouter();
 
@@ -37,6 +38,7 @@ export default function MatchesPage() {
       const likedUser = potentialMatches[currentIndex];
 
       try {
+        setIsLikeLoading(true);
         const result = await likeUser(likedUser.id);
 
         if (result.isMatch) {
@@ -47,12 +49,14 @@ export default function MatchesPage() {
         setCurrentIndex((prev) => prev + 1);
       } catch (err) {
         console.error(err);
+      } finally {
+        setIsLikeLoading(false);
       }
     }
   }
 
   function handlePass() {
-    if (currentIndex < potentialMatches.length - 1) {
+    if (currentIndex <= potentialMatches.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     }
   }
@@ -147,7 +151,11 @@ export default function MatchesPage() {
         <div className="max-w-md mx-auto">
           <MatchCard user={currentPotentialMatch} />
           <div className="mt-8">
-            <MatchButtons onLike={handleLike} onPass={handlePass} />
+            <MatchButtons
+              onLike={handleLike}
+              onPass={handlePass}
+              loading={isLikeLoading}
+            />
           </div>
         </div>
 
