@@ -81,7 +81,7 @@ export async function likeUser(toUserId: string) {
   });
 
   if (likeError) {
-    throw new Error("Failed to create like");
+    // throw new Error("Failed to create like");
   }
 
   const { data: existingLike, error: checkError } = await supabase
