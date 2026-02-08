@@ -12,7 +12,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { Channel, Event, StreamChat } from "stream-chat";
+import { Channel, Event, MessageResponse, StreamChat } from "stream-chat";
 import { text } from "stream/consumers";
 import VideoCall from "./VideoCall";
 
@@ -124,7 +124,7 @@ export default function StreamChatInterface({
         const state = await chatChannel.query({ messages: { limit: 50 } });
 
         // Convert stream messages to our format
-        const convertedMessages: Message[] = state.messages.map((msg: any) => ({
+        const convertedMessages: Message[] = state.messages.map((msg: MessageResponse) => ({
           id: msg.id,
           text: msg.text || "",
           sender: msg.user?.id === userId ? "me" : "other",
