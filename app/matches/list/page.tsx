@@ -17,7 +17,7 @@ export default function MatchesListPage() {
       try {
         const userMatches = await getUserMatches();
         setMatches(userMatches);
-      } catch (error) {
+      } catch (err) {
         setError("Failed to load matches.");
       } finally {
         setLoading(false);
@@ -45,7 +45,7 @@ export default function MatchesListPage() {
       <div className="container mx-auto px-4 py-8">
         <header className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Your Matches
+            {error ? error : "Your Matches"}
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
             {matches.length} match{matches.length !== 1 && "es"}
