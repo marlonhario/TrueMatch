@@ -42,14 +42,12 @@ export default function ProfilePage() {
     async function loadProfile() {
       try {
         const profileData = await getCurrentUserProfile();
-        console.log(profileData);
         if (profileData) {
           setProfile(profileData);
         } else {
           setError("Failed to load profile");
         }
       } catch (err) {
-        console.error("Error loading profile: ", err);
         setError("Failed to load profile");
       } finally {
         setLoading(false);
