@@ -29,7 +29,6 @@ export default function ChatPage() {
           unreadCount: 0,
         }));
         setChats(chatData);
-        console.log(userMatches);
       } catch (error) {
         console.error(error);
       } finally {

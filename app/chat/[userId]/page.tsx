@@ -29,7 +29,6 @@ export default function ChatConversationPage() {
         } else {
           router.push("/chat");
         }
-        console.log(userMatches);
       } catch (error) {
         console.error(error);
         router.push("/chat");
