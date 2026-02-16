@@ -56,19 +56,19 @@ export default function StreamChatInterface({
 
   const router = useRouter();
 
-  function scrollToBottom() {
+  const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     setShowScrollButton(false);
-  }
+  };
 
-  function handleScroll() {
+  const handleScroll = () => {
     if (messagesContainerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } =
         messagesContainerRef.current;
       const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
       setShowScrollButton(!isNearBottom);
     }
-  }
+  };
 
   useEffect(() => {
     scrollToBottom();
@@ -100,7 +100,7 @@ export default function StreamChatInterface({
         setCurrentUserId(userId!);
 
         const chatClient = StreamChat.getInstance(
-          process.env.NEXT_PUBLIC_STREAM_API_KEY!
+          process.env.NEXT_PUBLIC_STREAM_API_KEY!,
         );
 
         await chatClient.connectUser(
@@ -109,11 +109,11 @@ export default function StreamChatInterface({
             name: userName,
             image: userImage,
           },
-          token
+          token,
         );
 
         const { channelType, channelId } = await createOrGetChannel(
-          otherUser.id
+          otherUser.id,
         );
 
         // Get the channel
@@ -124,13 +124,15 @@ export default function StreamChatInterface({
         const state = await chatChannel.query({ messages: { limit: 50 } });
 
         // Convert stream messages to our format
-        const convertedMessages: Message[] = state.messages.map((msg: MessageResponse) => ({
-          id: msg.id,
-          text: msg.text || "",
-          sender: msg.user?.id === userId ? "me" : "other",
-          timestamp: new Date(msg.created_at || new Date()),
-          user_id: msg.user?.id || "",
-        }));
+        const convertedMessages: Message[] = state.messages.map(
+          (msg: MessageResponse) => ({
+            id: msg.id,
+            text: msg.text || "",
+            sender: msg.user?.id === userId ? "me" : "other",
+            timestamp: new Date(msg.created_at || new Date()),
+            user_id: msg.user?.id || "",
+          }),
+        );
 
         setMessages(convertedMessages);
 
